@@ -1,0 +1,14 @@
+C:\Users\DJKle\Documents\GitHub\Leaguesharp\MagicalGirlLux\bin\Release\MagicalGirlLux.exe.config
+C:\Users\DJKle\Documents\GitHub\Leaguesharp\MagicalGirlLux\bin\Release\MagicalGirlLux.exe
+C:\Users\DJKle\Documents\GitHub\Leaguesharp\MagicalGirlLux\bin\Release\MagicalGirlLux.pdb
+C:\Users\DJKle\Documents\GitHub\Leaguesharp\MagicalGirlLux\bin\Release\LeagueSharp.Common.dll
+C:\Users\DJKle\Documents\GitHub\Leaguesharp\MagicalGirlLux\bin\Release\LeagueSharp.dll
+C:\Users\DJKle\Documents\GitHub\Leaguesharp\MagicalGirlLux\bin\Release\SharpDX.Direct3D9.dll
+C:\Users\DJKle\Documents\GitHub\Leaguesharp\MagicalGirlLux\bin\Release\SharpDX.dll
+C:\Users\DJKle\Documents\GitHub\Leaguesharp\MagicalGirlLux\bin\Release\clipper_library.dll
+C:\Users\DJKle\Documents\GitHub\Leaguesharp\MagicalGirlLux\bin\Release\LeagueSharp.Sandbox.dll
+C:\Users\DJKle\Documents\GitHub\Leaguesharp\MagicalGirlLux\obj\Debug\MagicalGirlLux.csprojResolveAssemblyReference.cache
+C:\Users\DJKle\Documents\GitHub\Leaguesharp\MagicalGirlLux\obj\Debug\MagicalGirlLux.Properties.Resources.resources
+C:\Users\DJKle\Documents\GitHub\Leaguesharp\MagicalGirlLux\obj\Debug\MagicalGirlLux.csproj.GenerateResource.Cache
+C:\Users\DJKle\Documents\GitHub\Leaguesharp\MagicalGirlLux\obj\Debug\MagicalGirlLux.exe
+C:\Users\DJKle\Documents\GitHub\Leaguesharp\MagicalGirlLux\obj\Debug\MagicalGirlLux.pdb
