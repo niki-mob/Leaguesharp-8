@@ -68,7 +68,7 @@ namespace PewPewTristana
             combo.SubMenu("[Q] Settings").AddItem(new MenuItem("QonE", "Use [Q] if target has [E] debuff").SetValue(false));
 
 
-            combo.SubMenu("[W] Settings").AddItem(new MenuItem("UseW", "Use Rocket Jump").SetValue(true));
+            combo.SubMenu("[W] Settings").AddItem(new MenuItem("UseW", "Use Rocket Jump").SetValue(false));
             combo.SubMenu("[W] Settings")
                 .AddItem(new MenuItem("wnear", "Enemy Count").SetValue(new Slider(2, 5, 1)));
             combo.SubMenu("[W] Settings").AddItem(new MenuItem("whp", "Own HP %").SetValue(new Slider(75, 100, 0)));
