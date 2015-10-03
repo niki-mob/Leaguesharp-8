@@ -28,10 +28,10 @@ namespace CheerleaderLux
             E1 = new Spell(SpellSlot.E, 1100);
             R1 = new Spell(SpellSlot.R, 3400);
 
-            Q1.SetSkillshot(0.125f, 85f, 1375f, false, SkillshotType.SkillshotLine);
+            Q1.SetSkillshot(0.25f, 110f, 1250f, false, SkillshotType.SkillshotLine);
             W1.SetSkillshot(0.25f, 110f, 1200f, false, SkillshotType.SkillshotLine);
-            E1.SetSkillshot(0.25f, 280f, 900f, false, SkillshotType.SkillshotCircle);
-            R1.SetSkillshot(1f, 190f, float.MaxValue, false, SkillshotType.SkillshotLine);
+            E1.SetSkillshot(0.25f, 275f, 1425f, false, SkillshotType.SkillshotCircle);
+            R1.SetSkillshot(1.2f, 190f, 3000f, false, SkillshotType.SkillshotLine);
 
 
             #region Menu
@@ -255,24 +255,24 @@ namespace CheerleaderLux
             if (spellname.Contains("LuxLightBinding"))
             {
                 Q1.LastCastAttemptT = Environment.TickCount;
-                Printchat("[Q] Casted Tickcount: " + Q1.LastCastAttemptT);
+                Printchat("[Q] Casted Tickcount: " + Q1.LastCastAttemptT + "Speed: " + args.SData.LineWidth);
             }
 
-            if (spellname.Contains("LuxPrismaticWave"))
+            if (spellname.Contains("LuxLightStrikeKugel"))
             {
                 W1.LastCastAttemptT = Environment.TickCount;
-                Printchat("[W] Casted Tickcount: " + W1.LastCastAttemptT);
+                Printchat("[E] Casted Tickcount: " + W1.LastCastAttemptT + "Speed: " + args.SData.MissileSpeed);
             }
 
             if (spellname.Contains("LuxLightstrikeToggle"))
             {
                 E1.LastCastAttemptT = Environment.TickCount;
-                Printchat("[E-Toggle] Casted Tickcount: " + E1.LastCastAttemptT);
+                Printchat("[E-Toggle] Casted Tickcount: " + E1.LastCastAttemptT + "Speed: " + args.SData.MissileSpeed);
             }
             if (spellname.Contains("LuxMaliceCannon"))
             {
                 R1.LastCastAttemptT = Environment.TickCount;
-                Printchat("[R] Casted Tickcount: " + R1.LastCastAttemptT);
+                Printchat("[R] Casted Tickcount: " + R1.LastCastAttemptT + "Speed: " + args.SData.MissileSpeed);
             }
 
             //if (spellname.Contains("LuxMaliceCannon"))
@@ -604,10 +604,8 @@ namespace CheerleaderLux
             if (insideE)
                 rdmg += edmg;
             var rooted = target.HasBuff("LuxLightBindingMis");
-            var rslider = Config.Item("combo.r.slider").GetValue<Slider>().Value;
             #endregion
 
-            if (target.Distance(player.Position) < rslider && !rooted) return;
 
             if (insideE && thp < edmg && target.IsValidTarget(R1.Range))
                 return;
@@ -617,56 +615,68 @@ namespace CheerleaderLux
 
             #region -- Q spellcast
 
+            var prediction = Q1.GetPrediction(target, true);
+            var collision = Q1.GetCollision(Player.Position.To2D(), new List<Vector2> { prediction.UnitPosition.To2D() });
             if (Config.Item("combo.Q").GetValue<bool>() 
-                && Environment.TickCount - E1.LastCastAttemptT > 400 && Environment.TickCount - R1.LastCastAttemptT > 800)
-                SpellCast(target, Q1.Range, Q1, true, 1, false, PredQ("prediction.Q"));
-
-            if (Config.Item("combo.Q").GetValue<bool>() && player.Distance(target.Position) < 325
-                && Environment.TickCount - E1.LastCastAttemptT > 400 && Environment.TickCount - R1.LastCastAttemptT > 800 && Q1.GetPrediction(target).CollisionObjects.Count() <= 1)
-                Q1.Cast(target);
-
-            #endregion -- Q spellcast end
-
-
-            if (rooted && thp < aa && target.IsValidTarget(AArange))
-                return;
-
-            //Sprediction Cast [E]
-            if (Config.Item("combo.E").GetValue<bool>() && Environment.TickCount - Q1.LastCastAttemptT > 800 && Environment.TickCount - R1.LastCastAttemptT > 800)
-                SpellCast(target, E1.Range, E1, false, 1, true, PredE("prediction.E"));
-
-            if (IgniteKillCheck() < thp && target.HasBuff("summonerdot"))
-                return;
-
-            if (Config.Item("combo.R").GetValue<bool>() && R1.IsReady())
-                SpellCastR(targetR);
-
-            if (!target.IsValidTarget(600)) return;
-
-            var ignitemenu = Config.Item("autospells.ignite").GetValue<bool>();
-
-            if (thp > IgniteDamage(target) && thp < IgniteDamage(target) + edmg + aa && rooted && E1.IsReady() && target.IsValidTarget(600) && Ignite.IsReady() && ignitemenu)
+                && Environment.TickCount - E1.LastCastAttemptT > 400 && Environment.TickCount - R1.LastCastAttemptT > 800 && prediction.Hitchance >= PredQ("prediction.Q"))
             {
-                player.Spellbook.CastSpell(Ignite, target);
-                Printchat("Ignite casted");
-            }
+                if (collision.Count == 2)
+                {
+                    if (collision[0].IsChampion() || collision[1].IsChampion())
+                    {
+                        Q1.Cast(prediction.CastPosition);
+                    }
+                }
+                else if (collision.Count == 1 && collision[0].IsChampion())
+                {
+                    Q1.Cast(prediction.CastPosition);
+                }
+                else if (collision.Count <= 1)
+                {
+                    Q1.Cast(prediction.CastPosition);
+                }
+                #endregion -- Q spellcast end
 
-            if (thp < IgniteDamage(target) + rdmg + aa && rooted && Ignite.IsReady() && R1.IsReady() && ignitemenu)
-            {
-                player.Spellbook.CastSpell(Ignite, target);
-                Printchat("Ignite casted");
-            }
 
-            if (thp < IgniteDamage(target) + rdmg + aa && Ignite.IsReady() && R1.IsReady() && ignitemenu)
-            {
-                player.Spellbook.CastSpell(Ignite, target);
-                Printchat("Ignite casted");
-            }
+                if (rooted && thp < aa && target.IsValidTarget(AArange))
+                    return;
 
-            if (thp < IgniteDamage(target) && target.IsValidTarget(600) && AllyCheck(target, 600) < 1 && Ignite.IsReady() && ignitemenu)
-            {
-                player.Spellbook.CastSpell(Ignite, target);
-                Printchat("Ignite casted");
+                if (Config.Item("combo.E").GetValue<bool>() && Environment.TickCount - Q1.LastCastAttemptT > 875 && Environment.TickCount - R1.LastCastAttemptT > 800)
+                    SpellCast(target, E1.Range, E1, false, 1, true, PredE("prediction.E"));
+
+                if (IgniteKillCheck() < thp && target.HasBuff("summonerdot"))
+                    return;
+
+                if (Config.Item("combo.R").GetValue<bool>() && R1.IsReady())
+                    SpellCastR(targetR);
+
+                if (!target.IsValidTarget(600)) return;
+
+                var ignitemenu = Config.Item("autospells.ignite").GetValue<bool>();
+
+                if (thp > IgniteDamage(target) && thp < IgniteDamage(target) + edmg + aa && rooted && E1.IsReady() && target.IsValidTarget(600) && Ignite.IsReady() && ignitemenu)
+                {
+                    player.Spellbook.CastSpell(Ignite, target);
+                    Printchat("Ignite casted");
+                }
+
+                if (thp < IgniteDamage(target) + rdmg + aa && rooted && Ignite.IsReady() && R1.IsReady() && ignitemenu)
+                {
+                    player.Spellbook.CastSpell(Ignite, target);
+                    Printchat("Ignite casted");
+                }
+
+                if (thp < IgniteDamage(target) + rdmg + aa && Ignite.IsReady() && R1.IsReady() && ignitemenu)
+                {
+                    player.Spellbook.CastSpell(Ignite, target);
+                    Printchat("Ignite casted");
+                }
+
+                if (thp < IgniteDamage(target) && target.IsValidTarget(600) && AllyCheck(target, 600) < 1 && Ignite.IsReady() && ignitemenu)
+                {
+                    player.Spellbook.CastSpell(Ignite, target);
+                    Printchat("Ignite casted");
+                }
             }
         }
 
@@ -692,7 +702,7 @@ namespace CheerleaderLux
         {
             var allies = 
                 ObjectManager.Get<Obj_AI_Hero>().Where(a => a.IsAlly 
-                && a.Distance(target.Position) < range && a.HealthPercentage() > 20 && !a.IsMe).ToList();
+                && a.Distance(target.Position) < range && a.HealthPercent > 20 && !a.IsMe).ToList();
 
             return allies.Count;
             
@@ -701,7 +711,7 @@ namespace CheerleaderLux
         {
             if (target == null) return;
             if (!target.IsValid) return;
-
+            var rslider = Config.Item("combo.r.slider").GetValue<Slider>().Value;
 
             #region variables/floats
             //[R] Combo Sequences
@@ -731,7 +741,7 @@ namespace CheerleaderLux
             var rooted = target.HasBuff("LuxLightBindingMis");
 
 
-            if (target.Distance(player.Position) < 300 && !rooted) return;
+            if (target.Distance(player.Position) < rslider && !rooted) return;
 
 
             #endregion
