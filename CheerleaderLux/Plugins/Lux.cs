@@ -324,7 +324,6 @@ namespace CheerleaderLux
                     Render.Circle.DrawCircle(ObjectManager.Player.Position, R1.Range - 2,
                         R1.IsReady() ? Config.Item("draw.R").GetValue<Circle>().Color : System.Drawing.Color.Red);
 
-            Drawing.DrawCircle(player.Position, Player.BoundingRadius, System.Drawing.Color.Gray);
         }
         private static void Edetonation()
         {
