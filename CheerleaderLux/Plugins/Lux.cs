@@ -28,10 +28,10 @@ namespace CheerleaderLux
             E1 = new Spell(SpellSlot.E, 1100);
             R1 = new Spell(SpellSlot.R, 3400);
 
-            Q1.SetSkillshot(0.25f, 110f, 1250f, false, SkillshotType.SkillshotLine);
+            Q1.SetSkillshot(0.25f, 110f, 1200f, false, SkillshotType.SkillshotLine);
             W1.SetSkillshot(0.25f, 110f, 1200f, false, SkillshotType.SkillshotLine);
-            E1.SetSkillshot(0.25f, 275f, 1425f, false, SkillshotType.SkillshotCircle);
-            R1.SetSkillshot(1.2f, 190f, 3000f, false, SkillshotType.SkillshotLine);
+            E1.SetSkillshot(0.25f, 275f, 1050f, false, SkillshotType.SkillshotCircle);
+            R1.SetSkillshot(1.1f, 190f, 3000f, false, SkillshotType.SkillshotLine);
 
 
             #region Menu
@@ -40,6 +40,7 @@ namespace CheerleaderLux
             TargetSelector.AddToMenu(Config.AddSubMenu(new Menu("Target Selector", "Target Selector")));
             Orbwalker = new Orbwalking.Orbwalker(Config.AddSubMenu(new Menu("Orbwalker Settings", "Orbwalker Settings")));
             var combo = Config.AddSubMenu(new Menu("Combat Settings", "Combat Settings"));
+            var hotkey = Config.AddSubMenu(new Menu("Hotkeys", "Hotkeys"));
             var prediction = Config.AddSubMenu(new Menu("Prediction Settings", "Prediction Settings"));
             var farm = Config.AddSubMenu(new Menu("Farm Settings", "Farm Settings"));
             var lane = farm.AddSubMenu(new Menu("Laneclear Settings", "Laneclear Farm Settings"));
@@ -60,16 +61,19 @@ namespace CheerleaderLux
             Rsettings.AddItem(new MenuItem("advanced.R.aoe", "Use [R] on X amount of Enemies").SetValue(true));
             Rsettings.AddItem(new MenuItem("advanced.R.aoe.count", "Enemy Count").SetValue(new Slider(3, 5, 1)));
             Rsettings.AddItem(new MenuItem("combo.r.slider", "Min. [R] Distance").SetValue(new Slider(450, 1000, 0)));
-
             combo.AddItem(new MenuItem("combo.Q", "Use Q").SetValue(true));
             combo.AddItem(new MenuItem("combo.W", "Use W").SetValue(true));
             combo.AddItem(new MenuItem("combo.E", "Use E").SetValue(true));
             combo.AddItem(new MenuItem("combo.R", "Use R").SetValue(true));
 
+            //Hotkeys
+            hotkey.AddItem(new MenuItem("semi-ult", "Semi-manual [R] - [Cast ult on your target with Prediction] ").SetValue(new KeyBind('H', KeyBindType.Press)));
+            hotkey.AddItem(new MenuItem("semi-w", "Semi-manual [W] - [Shield closest ally to mouse cursor] ").SetValue(new KeyBind('W', KeyBindType.Press)));
+
             //Harras Menu
             var Harass = combo.AddSubMenu(new Menu("Harass Settings", "harras").SetFontStyle(System.Drawing.FontStyle.Bold));
             Harass.AddItem(new MenuItem("harass.support", "Disable Autoattack").SetValue(false));
-            Harass.AddItem(new MenuItem("harass.mana.slider", "Enemy Count").SetValue(new Slider(3, 5, 1)));
+            Harass.AddItem(new MenuItem("harass.mana.slider", "Min. Mana Percentage").SetValue(new Slider(65, 100, 0)));
             Harass.AddItem(new MenuItem("harass.Q", "Use [Q] in Harass").SetValue(true));
             Harass.AddItem(new MenuItem("harass.E", "Use [E] in Harass").SetValue(true));
             Harass.AddItem(new MenuItem("autoharass", "AutoHarass Toggle").SetValue(new KeyBind('L', KeyBindType.Toggle)));
@@ -174,7 +178,7 @@ namespace CheerleaderLux
         {
             try
             {
-                if (sender.IsMe || sender == null || !sender.IsEnemy || sender.IsMinion || W1.Level < 1 || !sender.IsValid || !Config.Item("combo.W").GetValue<bool>()) return;
+                if (sender.IsMe || sender == null || !sender.IsEnemy || sender.IsMinion || W1.Level < 1 || !sender.IsValid || !Config.Item("combo.W").GetValue<bool>() || Player.IsWindingUp) return;
                 var lowestally = HeroManager.Allies.Where(a => !a.IsDead && a.IsValidTarget(W1.Range) && a.IsValid && !a.IsMe).OrderBy(a => a.Health).FirstOrDefault();
 
                 //Will Prioritize W cast on Allies
@@ -214,6 +218,23 @@ namespace CheerleaderLux
             Edetonation();
             //R
             Actives();
+            if (Config.Item("semi-ult").GetValue<KeyBind>().Active)
+            {
+                var target = TargetSelector.GetTarget(R1.Range, TargetSelector.DamageType.Magical);
+                if (target == null || !target.IsValid) return;
+                if (R1.IsReady())
+                {
+                    SpellCast(target, R1.Range, R1, false, 1, false, PredR("prediction.R"));
+                }
+            }
+            if (Config.Item("semi-w").GetValue<KeyBind>().Active)
+            {
+                var ally = HeroManager.Allies.Where(a => a.IsValid && !a.IsMinion && !a.IsMe).OrderBy(a => a.Distance(Game.CursorPos)).FirstOrDefault();
+                if (W1.IsReady())
+                {
+                    W1.Cast(ally);
+                }
+            }
 
             if (Q1.IsReady() && Config.Item("autospells.Q.cc").GetValue<bool>())
             {
