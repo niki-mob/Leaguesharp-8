@@ -28,7 +28,7 @@ namespace CheerleaderLux
             E1 = new Spell(SpellSlot.E, 1100);
             R1 = new Spell(SpellSlot.R, 3400);
 
-            Q1.SetSkillshot(0.25f, 110f, 1200f, false, SkillshotType.SkillshotLine);
+            Q1.SetSkillshot(0.25f, 110f, 1300f, false, SkillshotType.SkillshotLine);
             W1.SetSkillshot(0.25f, 110f, 1200f, false, SkillshotType.SkillshotLine);
             E1.SetSkillshot(0.25f, 275f, 1050f, false, SkillshotType.SkillshotCircle);
             R1.SetSkillshot(1.1f, 190f, 3000f, false, SkillshotType.SkillshotLine);
