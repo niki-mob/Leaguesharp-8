@@ -141,7 +141,7 @@ namespace CheerleaderLux.Extensions
             }
 
             var mode = Config.Item("drawing.dmg").GetValue<StringList>().SelectedIndex;
-            if (mode == 0)
+            if (mode == 1)
             {
                 foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(enemy => enemy.Team != player.Team))
                 {
@@ -174,7 +174,7 @@ namespace CheerleaderLux.Extensions
                     }
                 }
             }
-            if (mode == 1)
+            if (mode == 0)
             {
                 Utility.HpBarDamageIndicator.DamageToUnit = CalcDamage;
                 Utility.HpBarDamageIndicator.Color = Config.Item("drawing.dmg.color").GetValue<Circle>().Color;

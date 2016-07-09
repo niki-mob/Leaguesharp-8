@@ -25,13 +25,13 @@ namespace CheerleaderLux
 
             Q1 = new Spell(SpellSlot.Q, 1150);
             W1 = new Spell(SpellSlot.W, 1075);
-            E1 = new Spell(SpellSlot.E, 1100);
+            E1 = new Spell(SpellSlot.E, 1300);
             R1 = new Spell(SpellSlot.R, 3400);
 
-            Q1.SetSkillshot(0.25f, 110f, 1300f, false, SkillshotType.SkillshotLine);
+            Q1.SetSkillshot(0.25f, 85f, 1150f, false, SkillshotType.SkillshotLine);
             W1.SetSkillshot(0.25f, 110f, 1200f, false, SkillshotType.SkillshotLine);
-            E1.SetSkillshot(0.25f, 275f, 1050f, false, SkillshotType.SkillshotCircle);
-            R1.SetSkillshot(1.1f, 190f, 3000f, false, SkillshotType.SkillshotLine);
+            E1.SetSkillshot(0.25f, 270f, 800f, false, SkillshotType.SkillshotCircle);
+            R1.SetSkillshot(1.1f, 190f, float.MaxValue, false, SkillshotType.SkillshotLine);
 
 
             #region Menu
@@ -54,7 +54,7 @@ namespace CheerleaderLux
             Config.AddItem(new MenuItem("blank1", "                          "));
 
 
-            Config.AddItem(new MenuItem("blank3", "Made by ScienceARK").SetFontStyle(System.Drawing.FontStyle.Bold));
+            Config.AddItem(new MenuItem("blank3", "Made by Eversong").SetFontStyle(System.Drawing.FontStyle.Bold));
 
             //Combo Menu
             var Rsettings = combo.AddSubMenu(new Menu("Advanced [R] Settings", "advR").SetFontStyle(System.Drawing.FontStyle.Bold));
@@ -88,7 +88,7 @@ namespace CheerleaderLux
             //Drawings
             var dmgdraw = drawing.AddSubMenu(new Menu("Damage Indicator Settings", "DMGI"));
             dmgdraw.AddItem(new MenuItem("disable.dmg", "Fully Disable Damage Indicator").SetValue(false));
-            dmgdraw.AddItem(new MenuItem("drawing.dmg", "[Damage Indicator]:").SetValue(new StringList(new[] { "Custom", "Common" })));
+            dmgdraw.AddItem(new MenuItem("drawing.dmg", "[Damage Indicator]:").SetValue(new StringList(new[] { "Common", "Custom" })));
             dmgdraw.AddItem(new MenuItem("drawing.dmg.color", "Color").SetValue(new Circle(true, System.Drawing.Color.Orange)));
             dmgdraw.AddItem(new MenuItem("draw.R.dmg", "Draw Current [R] Damage on Enemies").SetValue(false));
 

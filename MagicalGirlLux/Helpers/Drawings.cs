@@ -14,21 +14,7 @@ namespace MagicalGirlLux.Helpers
             Drawing.OnDraw += DamageIndicator;
             Drawing.OnDraw += Indicator;
             Drawing.OnEndScene += MiniMapDraw;
-            Drawing.OnDraw += Eobject;
-        }
 
-        private static void Eobject(EventArgs args)
-        {
-            if (LuxEGameObject != null && Config.Item("LuxE.Indicator").GetValue<bool>())
-            {
-                if (LuxEGameObject == null) return;
-                var pos1 = Drawing.WorldToScreen(player.Position);
-                var pos2 = Drawing.WorldToScreen(LuxEGameObject.Position);
-
-
-                Drawing.DrawLine(pos1, pos2, 1, System.Drawing.Color.LightBlue);
-                Drawing.DrawCircle(LuxEGameObject.Position, 100, System.Drawing.Color.Gray);
-            }
         }
 
         static void MiniMapDraw (EventArgs args)

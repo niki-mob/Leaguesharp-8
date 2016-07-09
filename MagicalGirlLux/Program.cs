@@ -13,9 +13,12 @@ namespace MagicalGirlLux
     {
         private static void Main(string[] args)
         {
-            CustomEvents.Game.OnGameLoad += OnLoad;
+            if (player.ChampionName == "Lux")
+            {
+                CustomEvents.Game.OnGameLoad += OnLoad;
+            }
         }
-        public const string ChampName = "Lux";
+
         public static Menu Config;
         public static Orbwalking.Orbwalker Orbwalker;
         public static Spell Q, W, E, R;
@@ -23,15 +26,19 @@ namespace MagicalGirlLux
         public static SpellSlot Ignite;
         public static SpellSlot Flash;
         public static GameObject LuxEGameObject;
-        public static readonly Obj_AI_Hero player = ObjectManager.Player;
+        public static Obj_AI_Hero player;
         public static SoundPlayer welcome = new SoundPlayer(Properties.Resources.Welcome);
 
         private static void OnLoad(EventArgs args)
         {
-            if (player.ChampionName != ChampName)
-                return;
 
-            Notifications.AddNotification("Magical Girl Lux ~ ", 10000);
+
+
+
+
+            
+
+                Notifications.AddNotification("Magical Girl Lux ~ ", 10000);
 
             Q = new Spell(SpellSlot.Q, 1175);
 
@@ -111,7 +118,6 @@ namespace MagicalGirlLux
 
             drawing.SubMenu("Misc Drawings").AddItem(new MenuItem("drawMinimapR", "Minimap [R] Range Indicator").SetValue(true));
             drawing.SubMenu("Misc Drawings").AddItem(new MenuItem("indicator", "Enemy Indicator").SetValue(true));
-            drawing.SubMenu("Misc Drawings").AddItem(new MenuItem("LuxE.Indicator", "Lux E Indicator").SetValue(true));
             drawing.SubMenu("Misc Drawings").AddItem(new MenuItem("jg", "Junglesteal Indicator").SetValue(true));
             drawing.SubMenu("Misc Drawings").AddItem(new MenuItem("ah", "AutoHarass Indicator").SetValue(true));
             //misc.AddItem(new MenuItem("skinhax", "Skin Manager").SetValue(true));
